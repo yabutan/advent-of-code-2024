@@ -16,12 +16,7 @@ fn main() -> anyhow::Result<()> {
             .map(|x| x.parse::<i32>().unwrap())
             .collect();
 
-        let res = match check_report(&levels) {
-            ReportResult::Safe => ReportResult::Safe,
-            ReportResult::Unsafe => check_report2(&levels),
-        };
-
-        if let ReportResult::Safe = res {
+        if check_safe(&levels) || check_safe_with_tolerate(&levels) {
             count += 1;
         }
     }
@@ -30,50 +25,43 @@ fn main() -> anyhow::Result<()> {
     Ok(())
 }
 
-enum ReportResult {
-    Safe,
-    Unsafe,
-}
-
-fn check_report(levels: &[i32]) -> ReportResult {
+fn check_safe(levels: &[i32]) -> bool {
     let diffs: Vec<_> = levels.windows(2).map(|x| x[1] - x[0]).collect();
     if diffs.iter().all(|&x| (1..=3).contains(&x)) {
-        return ReportResult::Safe;
+        return true;
     }
     if diffs.iter().all(|&x| (-3..=-1).contains(&x)) {
-        return ReportResult::Safe;
+        return true;
     }
-
-    ReportResult::Unsafe
+    false
 }
 
-fn check_report2(levels: &[i32]) -> ReportResult {
+fn check_safe_with_tolerate(levels: &[i32]) -> bool {
     let diffs: Vec<_> = levels.windows(2).map(|x| x[1] - x[0]).collect();
-    if let Some(i) = diffs.iter().position(|&x| !(1..=3).contains(&x)) {
-        let mut a = levels.to_vec();
-        let mut b = levels.to_vec();
-        a.remove(i);
-        b.remove(i + 1);
 
-        if let ReportResult::Safe = check_report(&a) {
-            return ReportResult::Safe;
-        } else if let ReportResult::Safe = check_report(&b) {
-            return ReportResult::Safe;
+    if let Some(i) = diffs.iter().position(|&x| !(1..=3).contains(&x)) {
+        let (a, b) = candidate_levels(levels, i);
+        if check_safe(&a) || check_safe(&b) {
+            return true;
         }
     }
 
     if let Some(i) = diffs.iter().position(|&x| !(-3..=-1).contains(&x)) {
-        let mut a = levels.to_vec();
-        let mut b = levels.to_vec();
-        a.remove(i);
-        b.remove(i + 1);
-
-        if let ReportResult::Safe = check_report(&a) {
-            return ReportResult::Safe;
-        } else if let ReportResult::Safe = check_report(&b) {
-            return ReportResult::Safe;
+        let (a, b) = candidate_levels(levels, i);
+        if check_safe(&a) || check_safe(&b) {
+            return true;
         }
     }
 
-    ReportResult::Unsafe
+    false
+}
+
+fn candidate_levels(levels: &[i32], i: usize) -> (Vec<i32>, Vec<i32>) {
+    let mut a = levels.to_vec();
+    let mut b = levels.to_vec();
+
+    a.remove(i);
+    b.remove(i + 1);
+
+    (a, b)
 }
