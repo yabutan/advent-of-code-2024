@@ -1,0 +1,12 @@
+[package]
+name = "day-03"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = { workspace = true }
+indoc = { workspace = true }
+nom = { workspace = true }
+
+
+
