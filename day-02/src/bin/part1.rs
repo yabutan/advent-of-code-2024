@@ -3,7 +3,6 @@ use std::io::{BufRead, BufReader};
 
 /// The levels are either all increasing or all decreasing.
 /// Any two adjacent levels differ by at least one and at most three.
-
 fn main() -> anyhow::Result<()> {
     //let r = BufReader::new(fs::File::open("day-02/data/sample.txt")?);
     let r = BufReader::new(fs::File::open("day-02/data/input.txt")?);

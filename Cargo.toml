@@ -7,22 +7,26 @@ members = [
 [workspace.dependencies]
 anyhow = "1.0"
 indoc = "2.0"
-itertools = "0.13"
+itertools = "0.14"
 linked-hash-map = "0.5"
-rstest = "0.23"
+rstest = "0.26"
+chrono = "0.4"
+
+# chumsky
+chumsky = "0.9"
 
 # glam
-glam = "0.29"
+glam = "0.30"
 
 # num
 num = "0.4"
 num-integer = "0.1"
 
 # nom
-nom = "7.1"
-nom_locate = "4.2"
+nom = "8.0"
+nom_locate = "5.0"
 
 # petgraph
-petgraph = "0.6"
-rustworkx-core = "0.15"
+petgraph = "0.8"
+rustworkx-core = "0.17"
 

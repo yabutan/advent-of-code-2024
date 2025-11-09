@@ -3,7 +3,7 @@ use nom::bytes::complete::tag;
 use nom::character::complete::digit1;
 use nom::combinator::{map, map_res};
 use nom::sequence::separated_pair;
-use nom::IResult;
+use nom::{IResult, Parser};
 
 #[derive(Debug, Eq, PartialEq)]
 pub enum Token {
@@ -42,7 +42,8 @@ fn parse_mul(input: &str) -> IResult<&str, (i32, i32)> {
         map_res(digit1, str::parse),
         tag(","),
         map_res(digit1, str::parse),
-    )(input)?;
+    )
+    .parse(input)?;
 
     let (input, _) = tag(")")(input)?;
 
@@ -54,7 +55,8 @@ fn parse_token(input: &str) -> IResult<&str, Token> {
         map(parse_mul, |(a, b)| Token::Mul(a, b)),
         map(tag("do()"), |_| Token::Do),
         map(tag("don't()"), |_| Token::DoNot),
-    ))(input)
+    ))
+    .parse(input)
 }
 
 #[cfg(test)]
