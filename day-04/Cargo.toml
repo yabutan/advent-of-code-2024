@@ -6,8 +6,6 @@ edition = "2021"
 [dependencies]
 anyhow = { workspace = true }
 indoc = { workspace = true }
-chumsky = { workspace = true }
-chrono = { workspace = true }
 glam = { workspace = true }
 
 
