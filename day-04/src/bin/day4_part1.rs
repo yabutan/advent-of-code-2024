@@ -1,3 +1,4 @@
+use day_04::InputData;
 use glam::IVec2;
 
 fn main() -> anyhow::Result<()> {
@@ -13,56 +14,15 @@ fn main() -> anyhow::Result<()> {
     Ok(())
 }
 
-#[derive(Debug)]
-struct InputData<'a> {
-    text: &'a str,
-    width: usize,
-}
-
-impl<'a> InputData<'a> {
-    fn new(text: &'a str) -> Self {
-        let width = text.lines().next().unwrap().len();
-        Self { text, width }
-    }
-}
-
-#[derive(Debug)]
-struct Point {
-    pos: IVec2,
-}
-
-impl Point {
-    fn get_text(&self, input: &InputData, direction: &IVec2) -> Option<String> {
-        let mut s = Vec::new();
-        for i in 0..4 {
-            let next = self.pos + (direction * i);
-            if next.x < 0
-                || next.y < 0
-                || next.x >= input.width as i32
-                || next.y >= input.width as i32
-            {
-                return None;
-            }
-
-            // 末尾に改行があるので、W+1している。
-            let index = next.x as usize + (next.y as usize * (input.width + 1));
-            let c = &input.text[index..index + 1];
-            s.push(c);
-        }
-
-        Some(s.join(""))
-    }
-}
-
-fn count_xmas(input: &InputData) -> usize {
-    let points: Vec<Point> = input
+fn count_xmas(input: &day_04::InputData) -> usize {
+    let points: Vec<day_04::Point> = input
         .text
         .lines()
         .enumerate()
         .flat_map(|(y, line)| {
             line.chars().enumerate().map(move |(x, c)| {
                 if c == 'X' {
-                    Some(Point {
+                    Some(day_04::Point {
                         pos: IVec2::new(x as i32, y as i32),
                     })
                 } else {
@@ -101,6 +61,7 @@ fn count_xmas(input: &InputData) -> usize {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use day_04::Point;
     use indoc::indoc;
 
     #[test]
@@ -133,7 +94,7 @@ mod tests {
         println!("{p:?} {text:?}");
 
         let count = count_xmas(&input);
-
         println!("count: {count}");
+        assert_eq!(count, 18);
     }
 }
