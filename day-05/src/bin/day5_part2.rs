@@ -6,7 +6,7 @@ fn main() -> anyhow::Result<()> {
     let input = InputData::parse(text);
     let point = cal_point(&input);
     println!("point: {}", point);
-    // point: 5948
+    // point: 3062
 
     Ok(())
 }
@@ -14,7 +14,12 @@ fn main() -> anyhow::Result<()> {
 fn cal_point(input: &InputData) -> i32 {
     let mut count = 0;
     for record in &input.records {
-        if record.is_correct(input) {
+        if !record.is_correct(input) {
+            println!("{:?}", record);
+            let mut record = record.clone();
+            record.sort(input);
+
+            println!(" >>> {:?}", record);
             count += record.get_center();
         }
     }
