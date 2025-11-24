@@ -1,0 +1,10 @@
+[package]
+name = "day-07"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+anyhow = { workspace = true }
+indoc = { workspace = true }
+glam = { workspace = true }
+
